@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ledlight-controller"
+version = "0.1.0"
+description = "Skeleton service for syncing daylight measurements to a Wi-Fi RGB lamp"
+readme = "README.md"
+authors = [{name = "Your Name"}]
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "opencv-python",
+    "numpy",
+    "yeelight",
+    "types-requests",
+]
+
+[project.scripts]
+ledlight-controller = "ledlight_controller.main:main"
