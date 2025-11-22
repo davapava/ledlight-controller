@@ -21,3 +21,4 @@ dev = [
 
 [project.scripts]
 ledlight-controller = "ledlight_controller.main:main"
+ledlight-controller-tapo-capture = "ledlight_controller.scripts.tapo_capture_loop:main"
