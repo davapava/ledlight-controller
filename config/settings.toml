@@ -1,0 +1,27 @@
+# Default configuration for LED light controller auxiliary scripts
+
+[tapo_capture]
+interval_seconds = 10.0
+timeout_seconds = 10.0
+rtsp_url = "rtsp://celloman:FORGE-bros-viral@192.168.68.68:554/stream1"
+
+[lamp]
+protocol = "tuya"
+device_id = "bfefbcd468cf7cbd387a2f"
+local_key = '@i6l`#U!-N:-:a4-'
+version = "3.3"
+address = "192.168.68.74"
+
+[mapper]
+# Baseline ~30 lux (camera's practical darkness) and provisional daylight ceiling until calibrated.
+dark_lux = 30.0
+bright_lux = 120.0
+min_brightness = 0.0
+max_brightness = 255.0
+use_camera_average = true
+min_saturation = 200.0
+max_saturation = 255.0
+dark_brightness = 12.0
+dark_color_red = 20
+dark_color_green = 4
+dark_color_blue = 3

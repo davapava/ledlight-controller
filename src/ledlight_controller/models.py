@@ -19,3 +19,14 @@ class LightMeasurement:
 
     lux: float
     normalized: float | None = None
+    average_color: ColorRGB | None = None
+    dominant_channel: str | None = None
+
+
+@dataclass
+class LampColorCommand:
+    """Full color command for the lamp, including intensity controls."""
+
+    color: ColorRGB
+    brightness: int
+    saturation: int

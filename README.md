@@ -19,11 +19,11 @@ src/
 
 ## Arkitekturöversikt
 
-- `camera_client.py` beskriver gränssnittet mot webbkameran och en placeholder för en OpenCV-baserad implementation.
-- `light_client.py` definierar ett abstrakt gränssnitt för att prata med en Wi-Fi-lampa och ett enkelt Yeelight-inspirerat skelett.
-- `pipeline.py` håller logiken för att översätta ljusmätningar till RGB-färger.
-- `service.py` orkestrerar händelseflödet: läs kamera, mappa färg, uppdatera lampan.
-- `main.py` kommer i framtiden att binda ihop komponenterna och exponera ett CLI.
+ - `camera_client.py` beskriver gränssnittet mot webbkameran och en placeholder för en OpenCV-baserad implementation.
+ - `light_client.py` definierar ett abstrakt gränssnitt för att prata med en Wi-Fi-lampa och ett enkelt Yeelight-inspirerat skelett.
+ - `image_analysis.py` läser in stillbilder och räknar fram medelluminans och RGB-fördelning.
+ - `pipeline.py` håller logiken för att översätta ljusmätningar till RGB-färger.
+ - `service.py` orkestrerar händelseflödet: läs kamera, mappa färg, uppdatera lampan.
 
 ## Nästa steg
 
@@ -35,8 +35,39 @@ src/
 
 ## Hjälpskript
 
-- `ledlight-controller-tapo-capture` pollar en Tapo C100 RTSP-ström via `ffmpeg` och tar en stillbild var 20:e sekund (standard). Exempel:
+- `ledlight-controller-tapo-capture` pollar en Tapo C100 RTSP-ström via `ffmpeg`, analyserar varje bildruta och loggar medelluminans samt RGB-sammanfattning var 20:e sekund (standard). Exempel:
 
   ```bash
   python -m ledlight_controller.scripts.tapo_capture_loop --rtsp-url "rtsp://user:pass@192.168.68.68:554/stream1"
   ```
+
+  Standardvärden för `rtsp_url`, `interval_seconds` och `timeout_seconds` hämtas från `config/settings.toml` (`[tapo_capture]`-sektionen). Varje värde kan överskridas via motsvarande CLI-flagga.
+- `ledlight-controller-tuya-color` läser Tuya-konfigurationen ur `config/settings.toml` och skickar en RGB-färg till lampan med hjälp av `tinytuya`. Exempel:
+
+  ```bash
+  python -m ledlight_controller.scripts.tuya_color_test --hex ff8800
+  ```
+
+  Du kan använda `--rgb 255 136 0` om du hellre anger tre kanaler direkt.
+
+## Bildanalys
+
+Modulen `image_analysis.py` innehåller hjälpfunktioner som plockar ut medelluminans och färgkanaler från en bildruta. Exempel på användning:
+
+```python
+from pathlib import Path
+from ledlight_controller.image_analysis import analyse_image
+
+stats = analyse_image(Path("/tmp/tapo_snapshot.jpg"))
+print(stats.measurement.normalized)
+print(stats.average_color)
+```
+
+Den kräver att `numpy` och `opencv-python` (eller systempaketet `python3-opencv`) finns installerade.
+
+## Lampkonfiguration (Tuya)
+
+1. Skapa ett Tuya IoT Cloud-projekt och koppla din V-TAC-lampa (ofta Tuya-baserad). Dokumentation finns i [tinytuya-guiden](https://github.com/jasonacox/tinytuya#tuya-cloud-project).
+2. Hämta `device_id`, `local_key` och IP-adressen (`address`) för lampan och fyll i dem i `config/settings.toml` under `[lamp]`.
+3. Installera `tinytuya` i din miljö (`pip install tinytuya`).
+4. Testa anslutningen med `ledlight-controller-tuya-color` innan du kopplar mappningen till själva tjänsten.
