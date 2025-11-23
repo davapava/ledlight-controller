@@ -14,7 +14,7 @@ address = "192.168.68.74"
 
 [mapper]
 # Baseline ~30 lux (camera's practical darkness) and provisional daylight ceiling until calibrated.
-dark_lux = 30.0
+dark_lux = 25.0
 bright_lux = 120.0
 min_brightness = 0.0
 max_brightness = 255.0
@@ -22,6 +22,6 @@ use_camera_average = true
 min_saturation = 200.0
 max_saturation = 255.0
 dark_brightness = 12.0
-dark_color_red = 20
-dark_color_green = 4
-dark_color_blue = 3
+dark_color_red = 5
+dark_color_green = 5
+dark_color_blue = 5
